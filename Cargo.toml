@@ -1,0 +1,12 @@
+[package]
+name = "visualize-sqlite"
+version = "1.0.1"
+edition = "2018"
+description = "A simple way to draw a diagram from an sqlite database"
+license = "MIT"
+readme = "ReadMe.md"
+keywords = ["sqlite", "graphviz", "dot", "svg"]
+
+[dependencies]
+rusqlite = { version = "0.25.3" }
+eyre = { version = "0.6.5" }
