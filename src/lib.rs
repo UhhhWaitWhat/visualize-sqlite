@@ -33,8 +33,8 @@ mod raw {
     pub struct ForeignKey {
         #[sql_type = "Text"]
         pub table: String,
-        #[sql_type = "Text"]
-        pub to: String,
+        #[sql_type = "Nullable<Text>"]
+        pub to: Option<String>,
         #[sql_type = "Text"]
         pub from: String,
     }
@@ -59,7 +59,7 @@ struct Table {
 #[derive(Debug)]
 struct ForeignKey {
     target_table: String,
-    target_column: String,
+    target_column: Option<String>,
     source_table: String,
     source_column: String,
 }
