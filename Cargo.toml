@@ -1,6 +1,6 @@
 [package]
 name = "visualize-sqlite"
-version = "1.1.1"
+version = "2.0.0-rc.0"
 edition = "2018"
 description = "A simple way to draw a diagram from an sqlite database"
 license = "MIT"
@@ -9,5 +9,5 @@ repository = "https://github.com/PaulAvery/visualize-sqlite"
 keywords = ["sqlite", "graphviz", "dot", "svg"]
 
 [dependencies]
-diesel = { version = "1.4.7", features = [ "sqlite" ] }
+diesel = { version = "2.0.0-rc.0", features = [ "sqlite" ] }
 eyre = { version = "0.6.5" }

@@ -19,7 +19,7 @@ fn open_database() -> Result<SqliteConnection> {
 }
 
 fn main() -> Result<()> {
-    println!("{}", Schema::load(&open_database()?)?);
+    println!("{}", Schema::load(&mut open_database()?)?);
 
     Ok(())
 }

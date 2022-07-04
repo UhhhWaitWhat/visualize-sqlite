@@ -10,65 +10,64 @@ mod raw {
 
     #[derive(QueryableByName)]
     pub struct Table {
-        #[sql_type = "Text"]
+        #[diesel(sql_type = Text)]
         pub name: String,
     }
 
     #[derive(QueryableByName)]
     pub struct Column {
-        #[sql_type = "Text"]
+        #[diesel(sql_type = Text)]
         pub name: String,
-        #[sql_type = "Text"]
-        #[column_name = "type"]
+        #[diesel(sql_type = Text, column_name = "type")]
         pub typ: String,
-        #[sql_type = "Bool"]
+        #[diesel(sql_type = Bool)]
         pub notnull: bool,
-        #[sql_type = "Bool"]
+        #[diesel(sql_type = Bool)]
         pub pk: bool,
-        #[sql_type = "Nullable<Text>"]
+        #[diesel(sql_type = Nullable<Text>)]
         pub dflt_value: Option<String>,
     }
 
     #[derive(QueryableByName)]
     pub struct ForeignKey {
-        #[sql_type = "Text"]
+        #[diesel(sql_type = Text)]
         pub table: String,
-        #[sql_type = "Nullable<Text>"]
+        #[diesel(sql_type = Nullable<Text>)]
         pub to: Option<String>,
-        #[sql_type = "Text"]
+        #[diesel(sql_type = Text)]
         pub from: String,
     }
 }
 
-#[derive(Debug)]
-struct Column {
-    name: String,
-    typ: String,
-    nullable: bool,
-    default: Option<String>,
-    primary: bool,
+#[derive(Debug, Clone)]
+pub struct Column {
+    pub name: String,
+    pub typ: String,
+    pub nullable: bool,
+    pub default: Option<String>,
+    pub primary: bool,
 }
 
-#[derive(Debug)]
-struct Table {
-    name: String,
-    columns: Vec<Column>,
-    foreign_keys: Vec<ForeignKey>,
+#[derive(Debug, Clone)]
+pub struct Table {
+    pub name: String,
+    pub columns: Vec<Column>,
+    pub foreign_keys: Vec<ForeignKey>,
 }
 
-#[derive(Debug)]
-struct ForeignKey {
-    target_table: String,
-    target_column: Option<String>,
-    source_table: String,
-    source_column: String,
+#[derive(Debug, Clone)]
+pub struct ForeignKey {
+    pub target_table: String,
+    pub target_column: Option<String>,
+    pub source_table: String,
+    pub source_column: String,
 }
 
-#[derive(Debug)]
-pub struct Schema(Vec<Table>);
+#[derive(Debug, Clone)]
+pub struct Schema(pub Vec<Table>);
 
 impl Schema {
-    fn get_tables(db: &SqliteConnection) -> Result<Vec<Table>> {
+    fn get_tables(db: &mut SqliteConnection) -> Result<Vec<Table>> {
         let tables: Vec<raw::Table> = diesel::sql_query(
             "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT IN ('sqlite_sequence')",
         )
@@ -88,7 +87,7 @@ impl Schema {
             .collect()
     }
 
-    fn get_columns(db: &SqliteConnection, table: &str) -> Result<Vec<Column>> {
+    fn get_columns(db: &mut SqliteConnection, table: &str) -> Result<Vec<Column>> {
         let columns: Vec<raw::Column> =
             diesel::sql_query(format!("SELECT * FROM pragma_table_info('{}')", table)).load(db)?;
 
@@ -104,7 +103,7 @@ impl Schema {
             .collect())
     }
 
-    fn get_keys(db: &SqliteConnection, table: &str) -> Result<Vec<ForeignKey>> {
+    fn get_keys(db: &mut SqliteConnection, table: &str) -> Result<Vec<ForeignKey>> {
         let keys: Vec<raw::ForeignKey> = diesel::sql_query(format!(
             "SELECT * FROM pragma_foreign_key_list('{}')",
             table
@@ -122,7 +121,7 @@ impl Schema {
             .collect())
     }
 
-    pub fn load(db: &SqliteConnection) -> eyre::Result<Self> {
+    pub fn load(db: &mut SqliteConnection) -> eyre::Result<Self> {
         Ok(Self(Self::get_tables(db)?))
     }
 }

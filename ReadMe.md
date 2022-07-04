@@ -2,6 +2,9 @@
 
 Create simple visualizations of sqlite databases in GraphViz `dot` format.
 
+This version currently works with the latest prerelease version of diesel (2.0.0-rc.0).
+Use version 1.x of this crate if you need to work with version 1.x of diesel.
+
 **CLI**
 
 ```bash
@@ -16,7 +19,7 @@ use visualize_sqlite::Schema;
 
 fn main() {
     let db = SqliteConnection::establish("your_sqlite_database.db").unwrap();
-    let dot_input = Schema::load(&db).unwrap();
+    let dot_input = Schema::load(&mut db).unwrap();
 
     println!("{}", dot_input);
 }
