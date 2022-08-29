@@ -2,8 +2,8 @@
 
 Create simple visualizations of sqlite databases in GraphViz `dot` format.
 
-This version currently works with the latest prerelease version of diesel (2.0.0-rc.0).
-Use version 1.x of this crate if you need to work with version 1.x of diesel.
+This version only works with the 2.0 version of diesel.
+Use version 1.x of this crate if you need compatibility with an older diesel version.
 
 **CLI**
 
